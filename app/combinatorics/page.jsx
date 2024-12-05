@@ -1,7 +1,7 @@
 import React from 'react'
 import PairedCombinatorics from '@/components/PairedCombinatorics'
 
-const page = () => {
+const TransversPage = () => {
   return (
     <div>
       <PairedCombinatorics />
@@ -9,4 +9,4 @@ const page = () => {
   )
 }
 
-export default page
+export default TransversPage
