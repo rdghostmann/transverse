@@ -2,6 +2,7 @@
 import targetPairs from "@/lib/targetPair";
 import React, { useRef, useState } from "react";
 
+
 const PairedCombinatorics = () => {
   const tbl = useRef(null);
   const [analyticsData, setAnalyticsData] = useState([]);
@@ -12,6 +13,7 @@ const PairedCombinatorics = () => {
   const [rows, setRows] = useState(0);
   const [columns, setColumns] = useState(0);
   const [tableData, setTableData] = useState([]);
+
 
   const createTable = () => {
     const newTableData = Array.from({ length: rows }, () =>
@@ -58,6 +60,8 @@ const PairedCombinatorics = () => {
   const handleResultCheck = () => {
     const tableCells = tbl?.current.querySelectorAll('td');
     const analytics = {};
+
+
 
     // Clear previous highlights
     tableCells.forEach(cell => cell.classList.remove('bg-purple-500', 'text-white'));
@@ -163,7 +167,17 @@ const PairedCombinatorics = () => {
                     </tr>
                   ))}
                 </thead>
-         
+                <tbody ref={tbl}>
+                  {Array.from({ length: Math.ceil(modResults.length / 15) }).map((_, rowIndex) => (
+                    <tr key={rowIndex} className="border border-black border-collapse">
+                      {modResults.slice(rowIndex * 15, (rowIndex + 1) * 15).map((result, colIndex) => (
+                        <td key={colIndex} className="border border-black text-xs border-collapse">
+                          {result}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
               </table>
               <div>
                 <div className="mb-4">
@@ -205,7 +219,7 @@ const PairedCombinatorics = () => {
                             return (
                               <td
                                 key={colIndex}
-                                className ="border border-gray-500 p-2"
+                                className="border border-gray-500 p-2"
                               >
                                 {modResults[modResultIndex] !== undefined
                                   ? modResults[modResultIndex]
@@ -219,6 +233,10 @@ const PairedCombinatorics = () => {
                   </table>
                 )}
               </div>
+
+
+
+
             </div>
           </div>
         </div>
@@ -230,6 +248,8 @@ const PairedCombinatorics = () => {
           <p className="text-center text-xs">Please view with a Wider Screen</p>
         </div>
       </section>
+
+
     </>
   );
 };
