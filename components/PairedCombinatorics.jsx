@@ -163,7 +163,20 @@ const PairedCombinatorics = () => {
                     </tr>
                   ))}
                 </thead>
-         
+                <tbody ref={tbl}>
+                  {Array.from({ length: columns }).map((_, colIndex) => (
+                    <tr key={colIndex} className="border border-black border-collapse">
+                      {Array.from({ length: modResults.length - colIndex }).map((_, rowIndex) => {
+                        const resultIndex = rowIndex + colIndex;
+                        return (
+                          <td key={rowIndex} className="border border-black text-xs border-collapse">
+                            {modResults[resultIndex] !== undefined ? modResults[resultIndex] : ""}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
               </table>
               <div>
                 <div className="mb-4">
