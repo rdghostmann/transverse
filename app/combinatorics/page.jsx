@@ -3,7 +3,7 @@ import PairedCombinatorics from '@/components/PairedCombinatorics'
 
 const TransversPage = () => {
   return (
-    <div>
+    <div className=''>
       <PairedCombinatorics />
     </div>
   )

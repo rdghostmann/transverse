@@ -97,7 +97,7 @@ const PairedCombinatorics = () => {
     });
 
     // Update analyticsData with pairs and counts
-    setAnalyticsData(highlightedData.length > 0 ? highlightedData : [["No pairs found"]]);
+    setAnalyticsData(highlightedData.length > 1 ? highlightedData : [["No pairs found"]]);
   };
 
   return (
