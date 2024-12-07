@@ -20,6 +20,21 @@ const MinusPairedCombinatorics = () => {
     setTableData(newTableData);
   };
 
+    // Function to shuffle the userNumbers array
+    const handleRandomize = () => {
+      const shuffledNumbers = [...userNumbers]
+        .filter(num => num !== '') // Exclude empty inputs
+        .sort(() => Math.random() - 0.5); // Shuffle the array
+  
+      // Fill empty inputs with blank strings after shuffling
+      while (shuffledNumbers.length < userNumbers.length) {
+        shuffledNumbers.push('');
+      }
+  
+      setUserNumbers(shuffledNumbers); // Update state with shuffled numbers
+    };
+  
+  
   // Function to calculate the "choose n" sums and return modulus 90
   const calculateChooseN = (n) => {
     const numbers = userNumbers.map(num => parseInt(num)).filter(num => !isNaN(num));
@@ -136,6 +151,14 @@ const MinusPairedCombinatorics = () => {
                 <button onClick={handleCalculate} className="mx-auto bg-slate-700 text-white rounded px-2 py-1">
                   Calculate Choose {chooseN}
                 </button>
+                <div className="flex justify-center my-4">
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                    onClick={() => handleRandomize()}
+                  >
+                    Randomize N-Input
+                  </button>
+                </div>
               </div>
               <table className="w-full h-fit border border-black border-collapse text-center text-sm">
                 <thead>
