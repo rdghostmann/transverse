@@ -2,16 +2,17 @@
 import targetPairs from "@/lib/targetPair";
 import React, { useRef, useState } from "react";
 
-const ProductPairedCombinatorics = () => {
+const MinusPairedCombinatorics = () => {
   const tbl = useRef(null);
   const [analyticsData, setAnalyticsData] = useState([]);
   const [modResults, setModResults] = useState([]);
   const [userNumbers, setUserNumbers] = useState(Array(15).fill('')); // State for user input numbers
   const [chooseN, setChooseN] = useState(2); // State for "choose n"
 
-  const [rows, setRows] = useState(0);
-  const [columns, setColumns] = useState(0);
+  const [rows, setRows] = useState();
+  const [columns, setColumns] = useState();
   const [tableData, setTableData] = useState([]);
+
 
   const createTable = () => {
     const newTableData = Array.from({ length: rows }, () =>
@@ -20,25 +21,36 @@ const ProductPairedCombinatorics = () => {
     setTableData(newTableData);
   };
 
-    // Function to shuffle the userNumbers array
-    const handleRandomize = () => {
-      const shuffledNumbers = [...userNumbers]
-        .filter(num => num !== '') // Exclude empty inputs
-        .sort(() => Math.random() - 0.5); // Shuffle the array
-  
-      // Fill empty inputs with blank strings after shuffling
-      while (shuffledNumbers.length < userNumbers.length) {
-        shuffledNumbers.push('');
-      }
-  
-      setUserNumbers(shuffledNumbers); // Update state with shuffled numbers
-    };
-  
-  
+  // Function to calculate row sums and add the extra column
+  const getRowSum = (rowIndex) => {
+    const rowValues = Array.from({ length: columns }).map((_, colIndex) => {
+      const modResultIndex = colIndex * rows + rowIndex;
+      return modResults[modResultIndex] !== undefined
+        ? parseInt(modResults[modResultIndex], 10)
+        : 0;
+    });
+    return rowValues.reduce((acc, val) => acc + val, 0); // Sum of the row
+  };
+
+
+  // Function to shuffle the userNumbers array
+  const handleRandomize = () => {
+    const shuffledNumbers = [...userNumbers]
+      .filter(num => num !== '') // Exclude empty inputs
+      .sort(() => Math.random() - 0.5); // Shuffle the array
+
+    // Fill empty inputs with blank strings after shuffling
+    while (shuffledNumbers.length < userNumbers.length) {
+      shuffledNumbers.push('');
+    }
+
+    setUserNumbers(shuffledNumbers); // Update state with shuffled numbers
+  };
+
+
   // Function to calculate the "choose n" sums and return modulus 90
   const calculateChooseN = (n) => {
     const numbers = userNumbers.map(num => parseInt(num)).filter(num => !isNaN(num));
-
     let results = [];
 
     const combinations = (arr, n, start = 0, currentCombo = []) => {
@@ -47,7 +59,6 @@ const ProductPairedCombinatorics = () => {
         results.push(product % 90);
         return;
       }
-
       for (let i = start; i < arr.length; i++) {
         combinations(arr, n, i + 1, [...currentCombo, arr[i]]);
       }
@@ -56,6 +67,7 @@ const ProductPairedCombinatorics = () => {
     combinations(numbers, n);
     return results;
   };
+
 
   // Handle calculation and store the mod results
   const handleCalculate = () => {
@@ -162,7 +174,7 @@ const ProductPairedCombinatorics = () => {
               </div>
               <table className="w-full h-fit border border-black border-collapse text-center text-sm">
                 <thead>
-                  {Array.from({ length: 1 }).map((_, rowIndex) => (
+                  {Array.from({ length: 3 }).map((_, rowIndex) => (
                     <tr key={rowIndex} className="bg-gray-200">
                       {Array.from({ length: 15 }).map((_, colIndex) => {
                         const index = rowIndex * 15 + colIndex;
@@ -202,28 +214,31 @@ const ProductPairedCombinatorics = () => {
                   ))}
                 </tbody>
               </table>
-              <div>
+              <div className="mt-5 h-screen">
                 <div className="mb-4">
-                  <label className="block mb-2">
-                    Number of Rows:
-                    <input
-                      type="number"
-                      value={rows}
-                      onChange={(e) => setRows(Number(e.target.value))}
-                      className="ml-2 border border-gray-300 rounded px-2 py-1"
-                      min="0"
-                    />
-                  </label>
-                  <label className="block mb-2">
-                    Number of Columns:
-                    <input
-                      type="number"
-                      value={columns}
-                      onChange={(e) => setColumns(Number(e.target.value))}
-                      className="ml-2 border border-gray-300 rounded px-2 py-1"
-                      min="0"
-                    />
-                  </label>
+                  <p className="font-bold text-lg">Generate Table with N-rows & N-columns</p>
+                  <div className="mt-3 flex space-x-5">
+                    <label className="block mb-2">
+                      N-Rows:
+                      <input
+                        type="number"
+                        value={rows}
+                        onChange={(e) => setRows(Number(e.target.value))}
+                        className="ml-2 border border-gray-300 rounded px-2 py-1"
+                        min="0"
+                      />
+                    </label>
+                    <label className="block mb-2">
+                      N-Columns:
+                      <input
+                        type="number"
+                        value={columns}
+                        onChange={(e) => setColumns(Number(e.target.value))}
+                        className="ml-2 border border-gray-300 rounded px-2 py-1"
+                        min="0"
+                      />
+                    </label>
+                  </div>
                   <button
                     onClick={createTable}
                     className="bg-blue-500 text-white px-4 py-2 rounded"
@@ -237,24 +252,27 @@ const ProductPairedCombinatorics = () => {
                     <tbody>
                       {Array.from({ length: rows }).map((_, rowIndex) => (
                         <tr key={rowIndex}>
+                          {/* Render existing table cells */}
                           {Array.from({ length: columns }).map((_, colIndex) => {
                             const modResultIndex = colIndex * rows + rowIndex;
                             return (
-                              <td
-                                key={colIndex}
-                                className ="border border-gray-500 p-2"
-                              >
+                              <td key={colIndex} className="border border-gray-500 p-2">
                                 {modResults[modResultIndex] !== undefined
                                   ? modResults[modResultIndex]
                                   : ""}
                               </td>
                             );
                           })}
+                          {/* Extra column for row sum */}
+                          <td className="border border-gray-500 font-bold bg-gray-200">
+                            {getRowSum(rowIndex)}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 )}
+
               </div>
             </div>
           </div>
@@ -271,4 +289,4 @@ const ProductPairedCombinatorics = () => {
   );
 };
 
-export default ProductPairedCombinatorics;
+export default MinusPairedCombinatorics;
