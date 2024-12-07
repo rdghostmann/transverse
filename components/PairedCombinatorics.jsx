@@ -9,8 +9,8 @@ const PairedCombinatorics = () => {
   const [userNumbers, setUserNumbers] = useState(Array(15).fill('')); // State for user input numbers
   const [chooseN, setChooseN] = useState(2); // State for "choose n"
 
-  const [rows, setRows] = useState(0);
-  const [columns, setColumns] = useState(0);
+  const [rows, setRows] = useState();
+  const [columns, setColumns] = useState();
   const [tableData, setTableData] = useState([]);
 
   const createTable = () => {
@@ -19,6 +19,21 @@ const PairedCombinatorics = () => {
     );
     setTableData(newTableData);
   };
+
+  // Function to shuffle the userNumbers array
+  const handleRandomize = () => {
+    const shuffledNumbers = [...userNumbers]
+      .filter(num => num !== '') // Exclude empty inputs
+      .sort(() => Math.random() - 0.5); // Shuffle the array
+
+    // Fill empty inputs with blank strings after shuffling
+    while (shuffledNumbers.length < userNumbers.length) {
+      shuffledNumbers.push('');
+    }
+
+    setUserNumbers(shuffledNumbers); // Update state with shuffled numbers
+  };
+
 
   // Function to calculate the "choose n" sums and return modulus 90
   const calculateChooseN = (n) => {
@@ -135,10 +150,18 @@ const PairedCombinatorics = () => {
                 <button onClick={handleCalculate} className="mx-auto bg-slate-700 text-white rounded px-2 py-1">
                   Calculate Choose {chooseN}
                 </button>
+                <div className="flex justify-center my-4">
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                    onClick={() => handleRandomize()}
+                  >
+                    Randomize N-Input
+                  </button>
+                </div>
               </div>
               <table className="w-full h-fit border border-black border-collapse text-center text-sm">
                 <thead>
-                  {Array.from({ length: 1 }).map((_, rowIndex) => (
+                  {Array.from({ length: 3 }).map((_, rowIndex) => (
                     <tr key={rowIndex} className="bg-gray-200">
                       {Array.from({ length: 15 }).map((_, colIndex) => {
                         const index = rowIndex * 15 + colIndex;
@@ -178,28 +201,31 @@ const PairedCombinatorics = () => {
                   ))}
                 </tbody>
               </table>
-              <div>
+              <div className="h-screen">
                 <div className="mb-4">
-                  <label className="block mb-2">
-                    Number of Rows:
-                    <input
-                      type="number"
-                      value={rows}
-                      onChange={(e) => setRows(Number(e.target.value))}
-                      className="ml-2 border border-gray-300 rounded px-2 py-1"
-                      min="0"
-                    />
-                  </label>
-                  <label className="block mb-2">
-                    Number of Columns:
-                    <input
-                      type="number"
-                      value={columns}
-                      onChange={(e) => setColumns(Number(e.target.value))}
-                      className="ml-2 border border-gray-300 rounded px-2 py-1"
-                      min="0"
-                    />
-                  </label>
+                  <p className="font-bold">Generate Table with N-rows & N-columns</p>
+                  <div className="mt-3 flex space-x-5">
+                    <label className="block mb-2">
+                      N-Rows:
+                      <input
+                        type="number"
+                        value={rows}
+                        onChange={(e) => setRows(Number(e.target.value))}
+                        className="ml-2 border border-gray-300 rounded px-2 py-1"
+                        min="0"
+                      />
+                    </label>
+                    <label className="block mb-2">
+                      N-Columns:
+                      <input
+                        type="number"
+                        value={columns}
+                        onChange={(e) => setColumns(Number(e.target.value))}
+                        className="ml-2 border border-gray-300 rounded px-2 py-1"
+                        min="0"
+                      />
+                    </label>
+                  </div>
                   <button
                     onClick={createTable}
                     className="bg-blue-500 text-white px-4 py-2 rounded"
@@ -218,7 +244,7 @@ const PairedCombinatorics = () => {
                             return (
                               <td
                                 key={colIndex}
-                                className ="border border-gray-500 p-2"
+                                className="border border-gray-500 p-2"
                               >
                                 {modResults[modResultIndex] !== undefined
                                   ? modResults[modResultIndex]
