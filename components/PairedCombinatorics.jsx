@@ -32,20 +32,18 @@ const PairedCombinatorics = () => {
     );
     setTableData(newTableData);
   };
-
+  
+  // Function to calculate row sums and add the extra column
   const getRowSum = (rowIndex) => {
-    // Only consider visible cells in the pyramid pattern
     const rowValues = Array.from({ length: columns }).map((_, colIndex) => {
-      if (rowIndex < colIndex) return 0; // Skip invisible cells
       const modResultIndex = colIndex * rows + rowIndex;
       return modResults[modResultIndex] !== undefined
         ? parseInt(modResults[modResultIndex], 10)
         : 0;
     });
-    return rowValues.reduce((acc, val) => acc + val, 0);
+    return rowValues.reduce((acc, val) => acc + val, 0); // Sum of the row
   };
   
-
 
   // Function to shuffle the userNumbers array
   const handleRandomize = () => {
@@ -260,35 +258,32 @@ const PairedCombinatorics = () => {
                     Create Table
                   </button>
                 </div>
+
                 {tableData.length > 0 && (
-  <table ref={tbl} className="border border-gray-500 w-full text-center">
-    <tbody>
-      {Array.from({ length: rows }).map((_, rowIndex) => (
-        <tr key={rowIndex}>
-          {/* Render cells with an inverted right half pyramid pattern */}
-          {Array.from({ length: columns }).map((_, colIndex) => {
-            // Skip cells based on the pyramid pattern
-            if (rowIndex < colIndex) {
-              return <td key={colIndex} className="border border-gray-500 p-2"></td>;
-            }
-            const modResultIndex = colIndex * rows + rowIndex;
-            return (
-              <td key={colIndex} className="border border-gray-500 p-2">
-                {modResults[modResultIndex] !== undefined
-                  ? modResults[modResultIndex]
-                  : ""}
-              </td>
-            );
-          })}
-          {/* Extra column for row sum */}
-          <td className="border border-gray-500 font-bold bg-gray-200">
-            {getRowSum(rowIndex)}
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-)}
+                  <table ref={tbl} className="border border-gray-500 w-full text-center">
+                    <tbody>
+                      {Array.from({ length: rows }).map((_, rowIndex) => (
+                        <tr key={rowIndex}>
+                          {/* Render existing table cells */}
+                          {Array.from({ length: columns }).map((_, colIndex) => {
+                            const modResultIndex = colIndex * rows + rowIndex;
+                            return (
+                              <td key={colIndex} className="border border-gray-500 p-2">
+                                {modResults[modResultIndex] !== undefined
+                                  ? modResults[modResultIndex]
+                                  : ""}
+                              </td>
+                            );
+                          })}
+                          {/* Extra column for row sum */}
+                          <td className="border border-gray-500 font-bold bg-gray-200">
+                            {getRowSum(rowIndex)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
 
               </div>
             </div>
