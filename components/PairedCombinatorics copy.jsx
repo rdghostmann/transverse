@@ -13,12 +13,37 @@ const PairedCombinatorics = () => {
   const [columns, setColumns] = useState();
   const [tableData, setTableData] = useState([]);
 
+  // const createTable = () => {
+  //   // Create the initial table data with rows and columns
+  //   const newTableData = Array.from({ length: rows }, () => {
+  //     const row = Array.from({ length: columns }, () => ""); // Initialize row with empty values
+  //     const sum = row.reduce((acc, cell) => acc + (parseInt(cell) || 0), 0); // Calculate sum of row
+  //     return [...row, sum]; // Add the sum as the last column
+  //   });
+
+  //   // Update the tableData state with the new data
+  //   setTableData(newTableData);
+  // };
+
+
   const createTable = () => {
     const newTableData = Array.from({ length: rows }, () =>
       Array.from({ length: columns }, () => "")
     );
     setTableData(newTableData);
   };
+  
+  // Function to calculate row sums and add the extra column
+  const getRowSum = (rowIndex) => {
+    const rowValues = Array.from({ length: columns }).map((_, colIndex) => {
+      const modResultIndex = colIndex * rows + rowIndex;
+      return modResults[modResultIndex] !== undefined
+        ? parseInt(modResults[modResultIndex], 10)
+        : 0;
+    });
+    return rowValues.reduce((acc, val) => acc + val, 0); // Sum of the row
+  };
+  
 
   // Function to shuffle the userNumbers array
   const handleRandomize = () => {
@@ -239,24 +264,27 @@ const PairedCombinatorics = () => {
                     <tbody>
                       {Array.from({ length: rows }).map((_, rowIndex) => (
                         <tr key={rowIndex}>
+                          {/* Render existing table cells */}
                           {Array.from({ length: columns }).map((_, colIndex) => {
                             const modResultIndex = colIndex * rows + rowIndex;
                             return (
-                              <td
-                                key={colIndex}
-                                className="border border-gray-500 p-2"
-                              >
+                              <td key={colIndex} className="border border-gray-500 p-2">
                                 {modResults[modResultIndex] !== undefined
                                   ? modResults[modResultIndex]
                                   : ""}
                               </td>
                             );
                           })}
+                          {/* Extra column for row sum */}
+                          <td className="border border-gray-500 font-bold bg-gray-200">
+                            {getRowSum(rowIndex)}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 )}
+
               </div>
             </div>
           </div>
