@@ -35,13 +35,20 @@ const PairedCombinatorics = () => {
   
   // Function to calculate row sums and add the extra column
   const getRowSum = (rowIndex) => {
+    // Extract row values considering the inverted pyramid pattern
     const rowValues = Array.from({ length: columns }).map((_, colIndex) => {
+      if (rowIndex < colIndex) return 0; // Skip cells not part of the pyramid
       const modResultIndex = colIndex * rows + rowIndex;
       return modResults[modResultIndex] !== undefined
         ? parseInt(modResults[modResultIndex], 10)
         : 0;
     });
-    return rowValues.reduce((acc, val) => acc + val, 0); // Sum of the row
+  
+    // Calculate the sum of visible cells
+    const sum = rowValues.reduce((acc, val) => acc + val, 0);
+  
+    // If sum >= 90, return its modulus by 90
+    return sum >= 90 ? sum % 90 : sum;
   };
   
 
