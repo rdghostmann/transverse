@@ -33,7 +33,9 @@ const PairedCombinatorics = () => {
         ? parseInt(modResults[modResultIndex], 10)
         : 0;
     });
-    return rowValues.reduce((acc, val) => acc + val, 0); // Sum of the row
+    const sum = rowValues.reduce((acc, val) => acc + val, 0); // Sum of the row
+    return sum > 90 ? sum % 90 : sum;
+    
   };
 
 

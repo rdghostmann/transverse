@@ -13,44 +13,29 @@ const PairedCombinatorics = () => {
   const [columns, setColumns] = useState();
   const [tableData, setTableData] = useState([]);
 
-  // const createTable = () => {
-  //   // Create the initial table data with rows and columns
-  //   const newTableData = Array.from({ length: rows }, () => {
-  //     const row = Array.from({ length: columns }, () => ""); // Initialize row with empty values
-  //     const sum = row.reduce((acc, cell) => acc + (parseInt(cell) || 0), 0); // Calculate sum of row
-  //     return [...row, sum]; // Add the sum as the last column
-  //   });
-
-  //   // Update the tableData state with the new data
-  //   setTableData(newTableData);
-  // };
-
-
   const createTable = () => {
+    if (!rows || !columns || rows <= 0 || columns <= 0) {
+      alert("Please enter valid positive numbers for rows and columns.");
+      return;
+    }
+
     const newTableData = Array.from({ length: rows }, () =>
       Array.from({ length: columns }, () => "")
     );
     setTableData(newTableData);
   };
-  
+
   // Function to calculate row sums and add the extra column
   const getRowSum = (rowIndex) => {
-    // Extract row values considering the inverted pyramid pattern
     const rowValues = Array.from({ length: columns }).map((_, colIndex) => {
-      if (rowIndex < colIndex) return 0; // Skip cells not part of the pyramid
       const modResultIndex = colIndex * rows + rowIndex;
       return modResults[modResultIndex] !== undefined
         ? parseInt(modResults[modResultIndex], 10)
         : 0;
     });
-  
-    // Calculate the sum of visible cells
-    const sum = rowValues.reduce((acc, val) => acc + val, 0);
-  
-    // If sum >= 90, return its modulus by 90
-    return sum >= 90 ? sum % 90 : sum;
+    return rowValues.reduce((acc, val) => acc + val, 0); // Sum of the row
   };
-  
+
 
   // Function to shuffle the userNumbers array
   const handleRandomize = () => {
